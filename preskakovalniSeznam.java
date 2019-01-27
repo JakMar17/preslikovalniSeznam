@@ -4,7 +4,7 @@ public class preskakovalniSeznam {
 
     public static void main (String [] args) {
         prviNivo = new Seznam(0);
-
+        //to je test
         Enota tekoca = prviNivo.prva;
 
         long start = System.currentTimeMillis();
