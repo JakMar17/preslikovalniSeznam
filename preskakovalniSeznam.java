@@ -14,7 +14,7 @@ public class preskakovalniSeznam {
 
         System.out.println(konec-start);
         
-        long [] tabela = new long [10000];
+        long [] tabela = new long [1000];
         for (int i = 0; i < tabela.length; i++) {
             tabela[i] = iskanje(10000000);
         }
