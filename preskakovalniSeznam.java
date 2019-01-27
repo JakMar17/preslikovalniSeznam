@@ -1,61 +1,87 @@
 public class preskakovalniSeznam {
 
     private static Seznam prviNivo;
+    private static Seznam drugiNivo;
 
     public static void main (String [] args) {
         prviNivo = new Seznam(0);
-        //to je test
-        Enota tekoca = prviNivo.prva;
+        drugiNivo = new Seznam(1);
 
         long start = System.currentTimeMillis();
-        for (int i = 1; i < 10000000; i++) {
-            tekoca = prviNivo.dodajEnoto(i);
-        }
-        long konec = System.currentTimeMillis();
+        for (int i = 0; i < 10000000; i++) 
+            dodajElement(i);
+        System.out.println(System.currentTimeMillis()-start);
 
-        System.out.println(konec-start);
+        /*izpis(prviNivo);
+        izpis(drugiNivo);*/
+
+        System.out.println(prviNivo.stElementov);
+        System.out.println(drugiNivo.stElementov);
+
+        long [] tabela1  = new long [10000];
+        long [] tabela2 = new long [tabela1.length];
+
+        for (int i = 0; i < tabela1.length; i++) {
+
+            int random = (int) (Math.random()*prviNivo.stElementov);
+
+            start = System.currentTimeMillis();
+            iskanjePrimitivno(prviNivo, random);
+            tabela1[i] = System.currentTimeMillis()-start;
+
+            start = System.currentTimeMillis();
+            iskanje(random);
+            tabela2[i] = System.currentTimeMillis()-start;
+        }
+
+        long vsota1 = 0;
+        for (int i = 0; i < tabela1.length; i++)
+            vsota1 += tabela1[i];
+        System.out.println("Enonivojsko iskanje " + tabela1.length + " elementov: " + vsota1 + " " + vsota1/tabela1.length);
+
+        long vsota2 = 0;
+        for (int i = 0; i < tabela2.length; i++)
+            vsota2 += tabela2[i];
+        System.out.println("Dvonivojsko iskanje " + tabela2.length + " elementov: " + vsota2 + " " + vsota2/tabela2.length);
+
+        double x = (vsota2*100/vsota1);
+        System.out.println("Izboljsano za " + x + "%");
         
-        long [] tabela = new long [1000];
-        for (int i = 0; i < tabela.length; i++) {
-            tabela[i] = iskanje(10000000);
-        }
-
-        long vsota = 0;
-        long min = Long.MAX_VALUE;
-        long max = Long.MIN_VALUE;
-        for (int i = 0; i < tabela.length; i++) {
-            vsota += tabela[i];
-            if (min > tabela[i])
-                min = tabela[i];
-            else if (max < tabela[i])
-                max = tabela[i];
-        }
-        System.out.println(vsota/tabela.length);
-        System.out.println(min);
-        System.out.println(max);
-
-        
-        //izpis();
     }
 
-    private static long iskanje (int vrednost) {
-        long zacetek = System.currentTimeMillis();
-        Enota e = najdiVrednost(prviNivo, vrednost);
-        return System.currentTimeMillis()-zacetek;
+    private static void dodajElement (int element) {
+        prviNivo.dodajOsnovno(element);
+        int random = (int) (Math.random() *2);
+        if (random == 1)
+            drugiNivo.dodajVisjo(element, prviNivo.zadnja);
     }
 
-    private static void izpis() {
-        for (Enota e = prviNivo.prva; e != null; e = e.getNaslednja())
-            System.out.println(e.getElement());
+    private static void izpis(Seznam s) {
+        for (Enota e = s.prva.getNaslednja(); e != null; e = e.getNaslednja())
+            System.out.print(e.getElement() + " ");
+        System.out.println();
     }
 
-    private static Enota najdiVrednost (Seznam s, int vrednost) {
+    private static int iskanjePrimitivno (Seznam s, int vrednost) {
         for (Enota e = s.prva; e != null; e = e.getNaslednja())
             if (e.getElement() == vrednost)
-                return e;
-
-        return null;
+                return 1;
+        return -1;
     }
+
+    private static int iskanje (int vrednost) {
+        for (Enota e = drugiNivo.prva; e.getNaslednja() != null; e = e.getNaslednja()) {
+            if (e.getNaslednja().getElement() == vrednost)
+                return 1;
+            else if (e.getNaslednja().getElement() > vrednost) {
+                for (Enota e1 = e.nizjiNivo; e1 != null; e1 = e1.getNaslednja())
+                    if (e1.getElement() == vrednost)
+                        return 0;
+            }
+        }
+        return -1;
+    }
+
 }
 
 class Seznam {
@@ -77,10 +103,16 @@ class Seznam {
         this.nivo = nivo;
     }
 
-    public Enota dodajEnoto (int element) {
-        this.zadnja.setNaslednja(new Enota (element));
+    public void dodajOsnovno (int element) {
+        this.zadnja.setNaslednja(new Enota(element));
         this.zadnja = zadnja.getNaslednja();
-        return zadnja;
+        stElementov++;
+    }
+
+    public void dodajVisjo (int element, Enota nizjiNivo) {
+        this.zadnja.setNaslednja(new Enota (element, nizjiNivo));
+        this.zadnja = zadnja.getNaslednja();
+        stElementov++;
     }
 
 }
@@ -88,6 +120,7 @@ class Seznam {
 class Enota {
     private int element;
     private Enota naslednja;
+    public Enota nizjiNivo;
 
     public Enota () {
     }
@@ -95,10 +128,10 @@ class Enota {
     public Enota (int element) {
         this.element = element;
     }
-
-    public Enota (int element, Enota naslednja) {
+    
+    public Enota (int element, Enota nizjiNivo) {
         this.element = element;
-        this.naslednja = naslednja;
+        this.nizjiNivo = nizjiNivo;
     }
 
     public int getElement() {
