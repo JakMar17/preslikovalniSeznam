@@ -3,7 +3,8 @@ public class preskakovalniSeznam {
     private static Seznam prviNivo;
 
     public static void main (String [] args) {
-        prviNivo = new Seznam(0,0);
+        prviNivo = new Seznam(0);
+
         Enota tekoca = prviNivo.prva;
 
         long start = System.currentTimeMillis();
@@ -14,7 +15,7 @@ public class preskakovalniSeznam {
 
         System.out.println(konec-start);
         
-        long [] tabela = new long [10000];
+        long [] tabela = new long [1000];
         for (int i = 0; i < tabela.length; i++) {
             tabela[i] = iskanje(10000000);
         }
