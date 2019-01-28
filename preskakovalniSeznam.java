@@ -70,6 +70,10 @@ public class preskakovalniSeznam {
         }
     }
 
+    private static void dodaj (int element, int indeks) {
+        
+    }
+
     private static void izpis(Seznam s) {
         for (Enota e = s.prva.getNaslednja(); e != null; e = e.getNaslednja())
             System.out.print(e.getElement() + " ");
