@@ -1,3 +1,5 @@
+import java.io.PrintWriter;
+
 public class preskakovalniSeznam {
 
     private static Seznam prviNivo;
@@ -10,7 +12,7 @@ public class preskakovalniSeznam {
         tretjiNivo = new Seznam(2);
 
         long start = System.currentTimeMillis();
-        for (int i = 0; i < 10000000; i++) 
+        for (int i = 0; i < 1000000; i++) 
             dodajElement(i);
         System.out.println(System.currentTimeMillis()-start);
 
@@ -18,48 +20,27 @@ public class preskakovalniSeznam {
         System.out.println(drugiNivo.stElementov);
         System.out.println(tretjiNivo.stElementov);
 
-        /*long [] tabela1  = new long [1000];
-        long [] tabela2 = new long [tabela1.length];
-        long [] tabela3 = new long [tabela1.length];
+        try{
+            naNivoju();
+        }catch (Exception e) {}
+    }
 
-        for (int i = 0; i < tabela1.length; i++) {
-
-            int random = (int) (Math.random()*prviNivo.stElementov);
-
-            start = System.currentTimeMillis();
-            iskanjePrimitivno(prviNivo, random);
-            tabela1[i] = System.currentTimeMillis()-start;
-
-            start = System.currentTimeMillis();
-            iskanje(random);
-            tabela2[i] = System.currentTimeMillis()-start;
-
-            start = System.currentTimeMillis();
-            iskanje3(random);
-            tabela3[i] = System.currentTimeMillis()-start;
+    private static void naNivoju () throws Exception{
+        PrintWriter pw = new PrintWriter ("izhod.txt");
+        for (Enota e = prviNivo.prva.getNaslednja(); e.getNaslednja() != null; e = e.getNaslednja()) {
+            int naNivoju = 1;
+            Enota f = e;
+            while (f.visjiNivo != null) {
+                naNivoju++;
+                f = f.visjiNivo;
+            }
+            pw.println(naNivoju + "");
         }
+        pw.close();
+    }
 
-        long vsota1 = 0;
-        for (int i = 0; i < tabela1.length; i++)
-            vsota1 += tabela1[i];
-        System.out.println("Enonivojsko iskanje " + tabela1.length + " elementov: " + vsota1 + " " + vsota1/tabela1.length);
-
-        long vsota2 = 0;
-        for (int i = 0; i < tabela2.length; i++)
-            vsota2 += tabela2[i];
-        System.out.println("Dvonivojsko iskanje " + tabela2.length + " elementov: " + vsota2 + " " + vsota2/tabela2.length);
-
-        long vsota3 = 0;
-        for (int i = 0; i < tabela3.length; i++)
-            vsota3 += tabela3[i];
-        System.out.println("Tronivojsko iskanje " + tabela3.length + " elementov: " + vsota3 + " " + vsota3/tabela3.length);
-
-        double x = 100-(vsota3*100/vsota2);
-        System.out.println("Izboljsano za (3nivojsko/2nivojsko) " + x + "%");
-
-        x = 100-(vsota3*100/vsota1);
-        System.out.println("Izboljsano za (3nivojsko/1nivojsko) " + x + "%");*/
-
+    private static void vseNivojsko () {
+        long start;
         int vsota = 0;
         int [] najden = new int [4];
         for (int i = 0; i < 10000; i++) {
@@ -76,8 +57,6 @@ public class preskakovalniSeznam {
         System.out.println("Najdeni na tretjem nivoju  " + najden[1] + " | " + najden[1]/100 + "%");
         System.out.println("Najdeni na drugem nivoju   " + najden[2] + " | " + najden[2]/100 + "%");
         System.out.println("Najdeni na osnovnem nivoju " + najden[3] + " | " + najden[3]/100 + "%");
-
-        
     }
 
     private static void dodajElement (int element) {
@@ -146,6 +125,7 @@ class Seznam {
     public void dodajVisjo (int element, Enota nizjiNivo) {
         this.zadnja.setNaslednja(new Enota (element, nizjiNivo));
         this.zadnja = zadnja.getNaslednja();
+        this.zadnja.nizjiNivo.visjiNivo = this.zadnja;
         stElementov++;
     }
 
@@ -155,6 +135,7 @@ class Enota {
     private int element;
     private Enota naslednja;
     public Enota nizjiNivo;
+    public Enota visjiNivo;
 
     public Enota () {
     }
