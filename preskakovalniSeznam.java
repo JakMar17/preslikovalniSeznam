@@ -18,51 +18,10 @@ public class preskakovalniSeznam {
         System.out.println(drugiNivo.stElementov);
         System.out.println(tretjiNivo.stElementov);
 
-        /*long [] tabela1  = new long [1000];
-        long [] tabela2 = new long [tabela1.length];
-        long [] tabela3 = new long [tabela1.length];
-
-        for (int i = 0; i < tabela1.length; i++) {
-
-            int random = (int) (Math.random()*prviNivo.stElementov);
-
-            start = System.currentTimeMillis();
-            iskanjePrimitivno(prviNivo, random);
-            tabela1[i] = System.currentTimeMillis()-start;
-
-            start = System.currentTimeMillis();
-            iskanje(random);
-            tabela2[i] = System.currentTimeMillis()-start;
-
-            start = System.currentTimeMillis();
-            iskanje3(random);
-            tabela3[i] = System.currentTimeMillis()-start;
-        }
-
-        long vsota1 = 0;
-        for (int i = 0; i < tabela1.length; i++)
-            vsota1 += tabela1[i];
-        System.out.println("Enonivojsko iskanje " + tabela1.length + " elementov: " + vsota1 + " " + vsota1/tabela1.length);
-
-        long vsota2 = 0;
-        for (int i = 0; i < tabela2.length; i++)
-            vsota2 += tabela2[i];
-        System.out.println("Dvonivojsko iskanje " + tabela2.length + " elementov: " + vsota2 + " " + vsota2/tabela2.length);
-
-        long vsota3 = 0;
-        for (int i = 0; i < tabela3.length; i++)
-            vsota3 += tabela3[i];
-        System.out.println("Tronivojsko iskanje " + tabela3.length + " elementov: " + vsota3 + " " + vsota3/tabela3.length);
-
-        double x = 100-(vsota3*100/vsota2);
-        System.out.println("Izboljsano za (3nivojsko/2nivojsko) " + x + "%");
-
-        x = 100-(vsota3*100/vsota1);
-        System.out.println("Izboljsano za (3nivojsko/1nivojsko) " + x + "%");*/
 
         int vsota = 0;
         int [] najden = new int [4];
-        for (int i = 0; i < 10000; i++) {
+        for (int i = 0; i < 100000; i++) {
             int random = (int) (Math.random()*prviNivo.stElementov);
             start = System.currentTimeMillis();
 
